@@ -61,7 +61,7 @@ class SiteController extends Controller
         $object = new \stdClass();
 
         $object->name = 'layer///identity/akjsdasdj';
-        $object->array = ['Idea2' => 'inteliji', 'Roman2', 'Verkh3'];
+        $object->array = ['inteliji', 'Roman2', 'Verkh3'];
         $object->object = new \stdClass();
         $object->object->ass = 'shit!';
 

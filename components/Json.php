@@ -9,24 +9,25 @@ class Json
         return self::toJson($elem);
     }
 
-    private static function toJson($elem, $jsonString = ''){
+    private static function toJson($elem, $jsonString = '')
+    {
+        if (gettype($elem) === 'array' && self::hasNonIntegerKeys($elem)) {
+            $elem = (object)$elem;
+        }
+
         switch (gettype($elem)) {
             case 'array':
                 $count = count($elem);
                 $index = 0;
 
-                $jsonString  = $jsonString . '[ ';
-                foreach($elem as $key => $value){
+                $jsonString = $jsonString . '[ ';
+                foreach ($elem as $key => $value) {
                     $jsonString = $jsonString .
-                        (gettype($key) !== 'integer'
-                            ? self::toJson($key) . ': '
-                            : ''
-                        ) .
-                        self::toJson($value);
+                        self::toJson($value) .
 
-                    $index < $count-1
-                        ? $jsonString = $jsonString . ', '
-                        : $jsonString = $jsonString . ' ';
+                        ($index < $count - 1
+                            ? ', '
+                            : ' ');
 
                     $index++;
                 }
@@ -36,15 +37,15 @@ class Json
                 $count = count((array)$elem);
                 $index = 0;
 
-                $jsonString  = $jsonString . '{ ';
-                foreach($elem as $key => $value){
+                $jsonString = $jsonString . '{ ';
+                foreach ($elem as $key => $value) {
                     $jsonString = $jsonString .
                         self::toJson($key) . ': ' .
-                        self::toJson($value);
+                        self::toJson($value) .
 
-                    $index < $count-1
-                        ? $jsonString = $jsonString . ', '
-                        : $jsonString = $jsonString . ' ';
+                        ($index < $count - 1
+                            ? ', '
+                            : ' ');
 
                     $index++;
                 }
@@ -58,4 +59,14 @@ class Json
         return $jsonString;
     }
 
+    private static function hasNonIntegerKeys($arr)
+    {
+        foreach (array_keys($arr) as $item) {
+            if (gettype($item) !== 'integer') {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
